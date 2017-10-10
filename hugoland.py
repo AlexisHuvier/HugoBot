@@ -4,7 +4,7 @@ import urllib.request
 class HugoBot(discord.Client):
     def __init__(self):
         super().__init__()
-        self.version = "1.0.0-DEV"
+        self.version = "1.1.0-DEV"
         
     async def on_ready(self):
         print(self.user.name)
@@ -53,7 +53,7 @@ class HugoBot(discord.Client):
             await self.send_message(message.channel,embed=staff)
         if message.content.startswith("!haddock"):
             with urllib.request.urlopen("http://data.hugoland.fr/haddock.php?method=clair") as response:
-                haddock = response.read()
+                haddock = response.read().decode('utf8')
                 await self.send_message(message.channel, haddock)
 
 
