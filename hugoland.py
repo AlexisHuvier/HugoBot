@@ -1,4 +1,5 @@
 import discord, asyncio, varHugoland
+import urllib.request
 
 class HugoBot(discord.Client):
     def __init__(self):
@@ -50,6 +51,10 @@ class HugoBot(discord.Client):
             staff.add_field(name = "Modérateur",value="LavaPower", inline = False)
             staff.add_field(name = "Développeur",value="Spyromain", inline = False)
             await self.send_message(message.channel,embed=staff)
+        if message.content.startswith("!haddock"):
+            with urllib.request.urlopen("http://data.hugoland.fr/haddock.php?method=clair") as response:
+                haddock = response.read()
+                await self.send_message(message.channel, haddock)
 
 
 client = HugoBot()
