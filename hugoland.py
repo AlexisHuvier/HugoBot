@@ -54,7 +54,7 @@ class HugoBot(discord.Client):
         if message.content.startswith("!haddock"):
             with urllib.request.urlopen("http://data.hugoland.fr/haddock.php?method=clair") as response:
                 haddock = response.read().decode('utf8')
-                await self.edit_message(message, haddock)
+                await self.send_message(message.channel, haddock)
 
 
 client = HugoBot()
