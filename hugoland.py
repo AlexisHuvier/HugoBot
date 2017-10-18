@@ -1,5 +1,6 @@
 import discord, asyncio, varHugoland
 import urllib.request
+from bs4 import BeautifulSoup
 
 class HugoBot(discord.Client):
     def __init__(self):
@@ -55,6 +56,29 @@ class HugoBot(discord.Client):
             with urllib.request.urlopen("http://data.hugoland.fr/haddock.php?method=clair") as response:
                 haddock = response.read().decode('utf8')
                 await self.send_message(message.channel, haddock)
+        if message.content.startswith("!màj"):
+            if message.content == "!màj":
+                await self.send_message(message.channel, "Usage : !màj <article>")
+            elif len(message.content) > 4 and message.content[4] != " ":
+                await self.send_message(message.channel, "Commande inconnue. Peut-être souhaitiez-vous utiliser la commande !màj <article> ?")
+            else:
+                arg = message.content[5:]
+                if not arg:
+                    await self.send_message(message.channel, "Usage : !màj <article>")
+                else:
+                    url = "http://fr.hugoland-minecraft.wikia.com/wiki/" + urllib.parse.quote(arg)
+                    history = url + "?action=history"
+                    with urllib.request.urlopen(history) as response:
+                        try:
+                            data = response.read().decode("utf8")
+                            soup = BeautifulSoup(data, "html.parser")
+                            author = soup.find("a", class_="mw-redirect").text
+                            comment = soup.find("span", class_="comment").text
+                            msg = "**MÀJ** " + url + "\n" \
+                                + "Par " + author + " : " + comment
+                            await self.send_message(self.get_channel("356129617779621890"), msg)
+                        except:
+                            await self.send_message(message.channel, "Article introuvable")
 
 
 client = HugoBot()
