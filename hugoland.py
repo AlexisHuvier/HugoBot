@@ -72,7 +72,7 @@ class HugoBot(discord.Client):
                         try:
                             data = response.read().decode("utf8")
                             soup = BeautifulSoup(data, "html.parser")
-                            author = soup.find("a", class_="mw-redirect").text
+                            author = soup.find("a", class_="mw-userlink").text
                             comment = soup.find("span", class_="comment").text
                             msg = "**MÀJ** " + url + "\n" \
                                 + "Par " + author + " : " + comment
