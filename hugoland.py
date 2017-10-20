@@ -78,6 +78,12 @@ class HugoBot(discord.Client):
 							await self.send_message(self.get_channel("356129617779621890"), msg)
 						except:
 							await self.send_message(message.channel, "Article introuvable")
+		
+	async def on_message_edit(self, before, after):
+		if after.author.id == "307984283774222348":
+			msg = after.content.lower()
+			if "ok" in msg:
+				await self.delete_message(after)
 
 
 client = HugoBot()
