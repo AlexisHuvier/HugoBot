@@ -36,7 +36,10 @@ class HugoBot(discord.Client):
 			aide.add_field(name = "- !help", value = "Commande actuelle", inline = False)
 			aide.add_field(name = "- !info", value = "Informations sur moi", inline = False)
 			aide.add_field(name = "- !staff", value = "Le Staff de la communauté", inline = False)
-			aide.add_field(name = "- !ping",value = "Pour savoir si je suis là", inline = False)
+			aide.add_field(name = "- !ping", value = "Pour savoir si je suis là", inline = False)
+			aide.add_field(name = "- !haddock", value = "Génère aléatoirement un juron façon Cpt. Haddock", inline = False)
+			aide.add_field(name = "- !wiki <article>", value = "Poste le lien d'un article du wiki", inline = False)
+			aide.add_field(name = "- !màj <article>", value = "Poste la dernière mise à jour d'un article du wiki dans le salon #actu-wiki", inline = False)
 			await self.send_message(message.channel,embed=aide)
 		if message.content.startswith("!info"):
 			info = discord.Embed(title="HugoBot", description="Bot d'Hugoland", colour = 0x3498db)
