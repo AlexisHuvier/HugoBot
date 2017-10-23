@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 class HugoBot(discord.Client):
 	def __init__(self):
 		super().__init__()
-		self.version = "1.1.0-DEV"
+		self.version = "1.2.0-DEV"
 		
 	async def on_ready(self):
 		print(self.user.name)
@@ -31,8 +31,8 @@ class HugoBot(discord.Client):
 		if message.content.startswith("!ping"):
 			await self.send_message(message.channel, "Pong ! Je suis toujours là")
 		if message.content.startswith("!help"):
-			aide = discord.Embed(title="HugoBot - Help System V1.0", description="Système d'assistance d'HugoBot", colour = 0x2ecc71)
-			aide.set_footer(text="HugoBot - Help System V1.0",icon_url="https://cdn4.iconfinder.com/data/icons/meBaze-Freebies/512/info.png")
+			aide = discord.Embed(title="HugoBot - Help System V" + self.version, description="Système d'assistance d'HugoBot", colour = 0x2ecc71)
+			aide.set_footer(text="HugoBot - Help System V" + self.version,icon_url="https://cdn4.iconfinder.com/data/icons/meBaze-Freebies/512/info.png")
 			aide.add_field(name = "- !help", value = "Commande actuelle", inline = False)
 			aide.add_field(name = "- !info", value = "Informations sur moi", inline = False)
 			aide.add_field(name = "- !staff", value = "Le Staff de la communauté", inline = False)
