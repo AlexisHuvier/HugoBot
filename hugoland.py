@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 class HugoBot(discord.Client):
 	def __init__(self):
 		super().__init__()
-		self.version = "1.2.0-DEV"
+		self.version = "1.3.0-DEV"
 		
 	async def on_ready(self):
 		print(self.user.name)
@@ -40,6 +40,7 @@ class HugoBot(discord.Client):
 			aide.add_field(name = "- !haddock", value = "Génère aléatoirement un juron façon Cpt. Haddock", inline = False)
 			aide.add_field(name = "- !wiki <article>", value = "Poste le lien d'un article du wiki", inline = False)
 			aide.add_field(name = "- !màj <article>", value = "Poste la dernière mise à jour d'un article du wiki dans le salon #actu-wiki", inline = False)
+			aide.add_field(name = "- !cours <id bloc/item>", value = "Poste les prix actuels du bloc/item ayant l'id donné", inline = False)
 			await self.send_message(message.channel,embed=aide)
 		if message.content.startswith("!info"):
 			info = discord.Embed(title="HugoBot", description="Bot d'Hugoland", colour = 0x3498db)
@@ -81,6 +82,49 @@ class HugoBot(discord.Client):
 							await self.send_message(self.get_channel("356129617779621890"), msg)
 						except:
 							await self.send_message(message.channel, "Article introuvable")
+		if message.content.startswith("!cours"):
+			if message.content == "!cours":
+				await self.send_message(message.channel, "Usage : !cours <id bloc/item>")
+			elif len(message.content) > 6 and message.content[6] != " ":
+				await self.send_message(message.channel, "Commande inconnue. Peut-être souhaitiez-vous utiliser la commande !cours <id bloc/item> ?")
+			else:
+				arg = message.content[7:]
+				if not arg:
+					await self.send_message(message.channel, "Usage : !cours <id bloc/item>")
+				else:
+					url = "http://data.hugoland.fr/mc/cours.php?id=" + urllib.parse.quote(arg)
+					with urllib.request.urlopen(url) as response:
+						data = response.read().decode("utf8")
+						soup = BeautifulSoup(data, "html.parser")
+						msg = ""
+						if arg == "172":
+							msg += "**Attention :** les blocs d'argile durcie colorée se " \
+								+ "calculent comme ceci : prix du bloc d'argile durcie auquel on " \
+								+ "ajoute une valeur de quelques pièces par demi-stack par " \
+								+ "niveau de rareté\n"
+						prix1 = soup.find("span", id="prix1")
+						if prix1:
+							prix1 = prix1.text
+							if arg == "122":
+								prix6 = soup.find("span", id="prix6").text
+								prix12 = soup.find("span", id="prix12").text
+								msg += "**~~Easteregg~~ DRAGONEGG**\n" \
+									+ "**== ID " + arg + " ==**\n" \
+									+ "Prix à l'unité : " + prix1 + "p\n" \
+									+ "Prix à la demi-douzaine : " + prix6 + "p\n" \
+									+ "Prix à la douzaine : " + prix12 + "p"
+							else:
+								prix8 = soup.find("span", id="prix8").text
+								prix16 = soup.find("span", id="prix16").text
+								prix64 = soup.find("span", id="prix64").text
+								msg += "**== ID " + arg + " ==**\n" \
+									+ "Prix à l'unité : " + prix1 + "p\n" \
+									+ "Prix pour 8 : " + prix8 + "p\n" \
+									+ "Prix pour 16 : " + prix16 + "p\n" \
+									+ "Prix pour 64 : " + prix64 + "p"
+						else:
+							msg += "Aucun coefficient n'est attribué à cet id"
+						await self.send_message(message.channel, msg)
 		
 	async def on_message_edit(self, before, after):
 		if after.author.id == "307984283774222348":
