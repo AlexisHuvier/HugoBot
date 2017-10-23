@@ -45,7 +45,7 @@ class HugoBot(discord.Client):
 		if message.content.startswith("!info"):
 			info = discord.Embed(title="HugoBot", description="Bot d'Hugoland", colour = 0x3498db)
 			info.set_footer(text="HugoBot",icon_url="https://cdn4.iconfinder.com/data/icons/meBaze-Freebies/512/info.png")
-			info.add_field(name = "Codé par",value = "LavaPower")
+			info.add_field(name = "Codé par",value = "LavaPower et Spyromain")
 			info.add_field(name = "Version",value=self.version)
 			await self.send_message(message.channel,embed=info)
 		if message.content.startswith("!staff"):
