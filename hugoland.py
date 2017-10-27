@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 class HugoBot(discord.Client):
 	def __init__(self):
 		super().__init__()
-		self.version = "1.3.0-DEV"
+		self.version = "1.3.1"
 		
 	async def on_ready(self):
 		print(self.user.name)
@@ -77,7 +77,7 @@ class HugoBot(discord.Client):
 							soup = BeautifulSoup(data, "html.parser")
 							author = soup.find("a", class_="mw-userlink").text
 							comment = soup.find("span", class_="comment").text
-							msg = "**MÀJ** " + url + "\n" \
+							msg = "**MÀJ** <" + url + ">\n" \
 								+ "Par " + author + " : " + comment
 							await self.send_message(self.get_channel("356129617779621890"), msg)
 						except:
