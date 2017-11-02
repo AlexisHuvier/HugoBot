@@ -13,7 +13,7 @@ class HugoBot(discord.Client):
 	async def on_message(self,message):
 		if message.author.id == "307984283774222348":
 			msg = message.content.lower()
-			if "ok" in msg:
+			if "ok" in msg or "\U0001F197" in msg:
 				await self.delete_message(message)
 		if message.content.startswith("!wiki"):
 			if len(message.content) == 5 or len(message.content) == 6:
@@ -129,7 +129,7 @@ class HugoBot(discord.Client):
 	async def on_message_edit(self, before, after):
 		if after.author.id == "307984283774222348":
 			msg = after.content.lower()
-			if "ok" in msg:
+			if "ok" in msg or "\U0001F197" in msg:
 				await self.delete_message(after)
 
 
