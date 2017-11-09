@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 class HugoBot(discord.Client):
 	def __init__(self):
 		super().__init__()
-		self.version = "1.3.1"
+		self.version = "1.3.2"
 		
 	async def on_ready(self):
 		print(self.user.name)
@@ -13,7 +13,7 @@ class HugoBot(discord.Client):
 	async def on_message(self,message):
 		if message.author.id == "307984283774222348":
 			msg = message.content.lower()
-			if "ok" in msg or "\U0001F197" in msg:
+			if "ok" in msg or "\U0001F197" in msg or ("\U0001F1F4" in msg and "\U0001F1F0" in msg):
 				await self.delete_message(message)
 		if message.content.startswith("!wiki"):
 			if len(message.content) == 5 or len(message.content) == 6:
@@ -129,8 +129,12 @@ class HugoBot(discord.Client):
 	async def on_message_edit(self, before, after):
 		if after.author.id == "307984283774222348":
 			msg = after.content.lower()
-			if "ok" in msg or "\U0001F197" in msg:
+			if "ok" in msg or "\U0001F197" in msg or ("\U0001F1F4" in msg and "\U0001F1F0" in msg):
 				await self.delete_message(after)
+		
+	async def on_reaction_add(self, reaction, user):
+		if user.id == "307984283774222348" and all(letter in [x.emoji for x in reaction.message.reactions] for letter in ("\U0001F1F4", "\U0001F1F0")):
+			await self.remove_reaction(reaction.message, reaction.emoji, user)
 
 
 client = HugoBot()
