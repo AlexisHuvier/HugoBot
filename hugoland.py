@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 class HugoBot(discord.Client):
 	def __init__(self):
 		super().__init__()
-		self.version = "1.3.2"
+		self.version = "1.3.3"
 		
 	async def on_ready(self):
 		print(self.user.name)
@@ -39,6 +39,7 @@ class HugoBot(discord.Client):
 			aide.add_field(name = "- !ping", value = "Pour savoir si je suis là", inline = False)
 			aide.add_field(name = "- !haddock", value = "Génère aléatoirement un juron façon Cpt. Haddock", inline = False)
 			aide.add_field(name = "- !wiki <article>", value = "Poste le lien d'un article du wiki", inline = False)
+			aide.add_field(name = "- !new <article>", value = "Poste la création d'un nouvel article du wiki dans le salon #actu-wiki", inline = False)
 			aide.add_field(name = "- !màj <article>", value = "Poste la dernière mise à jour d'un article du wiki dans le salon #actu-wiki", inline = False)
 			aide.add_field(name = "- !cours <id bloc/item>", value = "Poste les prix actuels du bloc/item ayant l'id donné", inline = False)
 			await self.send_message(message.channel,embed=aide)
@@ -59,6 +60,28 @@ class HugoBot(discord.Client):
 			with urllib.request.urlopen("http://data.hugoland.fr/haddock.php?method=clair") as response:
 				haddock = response.read().decode('utf8')
 				await self.send_message(message.channel, haddock)
+		if message.content.startswith("!new"):
+			if message.content == "!new":
+				await self.send_message(message.channel, "Usage : !new <article>")
+			elif len(message.content) > 4 and message.content[4] != " ":
+				await self.send_message(message.channel, "Commande inconnue. Peut-être souhaitiez-vous utiliser la commande !new <article> ?")
+			else:
+				arg = message.content[5:]
+				if not arg:
+					await self.send_message(message.channel, "Usage : !new <article>")
+				else:
+					url = "http://fr.hugoland-minecraft.wikia.com/wiki/" + urllib.parse.quote(arg)
+					history = url + "?action=history"
+					with urllib.request.urlopen(history) as response:
+						try:
+							data = response.read().decode("utf8")
+							soup = BeautifulSoup(data, "html.parser")
+							author = soup.find_all("a", class_="mw-userlink")[-1].text
+							msg = "**N** <" + url + ">\n" \
+								+ "Par " + author
+							await self.send_message(self.get_channel("356129617779621890"), msg)
+						except:
+							await self.send_message(message.channel, "Article introuvable")
 		if message.content.startswith("!màj"):
 			if message.content == "!màj":
 				await self.send_message(message.channel, "Usage : !màj <article>")
