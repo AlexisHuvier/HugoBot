@@ -1,10 +1,10 @@
-import discord, asyncio, varHugoland, urllib.request
+import discord, asyncio, varHugoland, urllib.request, socket
 from bs4 import BeautifulSoup
 
 class HugoBot(discord.Client):
 	def __init__(self):
 		super().__init__()
-		self.version = "1.3.3"
+		self.version = "1.4.0"
 		
 	async def on_ready(self):
 		print(self.user.name)
@@ -15,6 +15,26 @@ class HugoBot(discord.Client):
 			msg = message.content.lower()
 			if "ok" in msg or "\U0001F197" in msg or ("\U0001F1F4" in msg and "\U0001F1F0" in msg):
 				await self.delete_message(message)
+		if message.content.startswith("!etat"):
+                    hote = "91.134.149.66"
+
+                    connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    port = 25565
+                    try:
+                        connection.connect((hote, port))
+                        connection.close()
+                        await self.send_message(message.channel, "Le serveur RP est ouvert")
+                    except ConnectionRefusedError:
+                        await self.send_message(message.channel, "Le serveur RP est fermé. <@226748223006441472>, merci d'ouvrir le serveur")
+
+                    connection2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   
+                    port = 20000
+                    try:
+                        connection2.connect((hote, port))
+                        connection2.close()
+                        await self.send_message(message.channel, "Le serveur détente est ouvert")
+                    except ConnectionRefusedError:
+                        await self.send_message(message.channel, "Le serveur détente est fermé. <@226748223006441472>, merci d'ouvrir le serveur")
 		if message.content.startswith("!wiki"):
 			if len(message.content) == 5 or len(message.content) == 6:
 				await self.send_message(message.channel,"ERREUR : Utilise !wiki <recherche>")
@@ -42,6 +62,7 @@ class HugoBot(discord.Client):
 			aide.add_field(name = "- !new <article>", value = "Poste la création d'un nouvel article du wiki dans le salon #actu-wiki", inline = False)
 			aide.add_field(name = "- !màj <article>", value = "Poste la dernière mise à jour d'un article du wiki dans le salon #actu-wiki", inline = False)
 			aide.add_field(name = "- !cours <id bloc/item>", value = "Poste les prix actuels du bloc/item ayant l'id donné", inline = False)
+			aide.add_field(name = "- !etat", value="Vérifie l'état des serveurs et mentionne LavaPower pour les relancer", inline = False)
 			await self.send_message(message.channel,embed=aide)
 		if message.content.startswith("!info"):
 			info = discord.Embed(title="HugoBot", description="Bot d'Hugoland", colour = 0x3498db)
